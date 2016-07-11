@@ -1,17 +1,27 @@
 <?php
-
-//namespace JohnConde\Authnet;
-require 'config.php';
-//require 'vendor/stymiee/authnetjson/src/autoload.php';
-
-
-// Helper to get transaction id's from database for which their is no settlement information
-
+require_once('config.php');
+require_once('database-factory.php');
+require_once('transaction-info-factory.php');
 // Define application version nuuber
 define( 'VERSION_NUMBER', '1.0' );
 
 if(!check_configuration())
 	die("One or more of Config variables are not set.");
+
+// Get all the transactions for which settlement time is null
+$database_connection = new Database_Factory();
+$unsettled_transaction_ids = $database_connection->getUnsettledTransactionIds();
+if(!empty($unsettled_transaction_ids))
+{
+    $transaction_object = new Transaction_Info_Factory();
+    $transaction_update_status = $transaction_object->updateUnsettledTransactions($unsettled_transaction_ids);
+    print_r( $transaction_update_status );
+}
+else
+{
+    echo " List of Unsettled transaction ids is empty";
+}
+
 
  
  // Update the table with settlement information
@@ -24,8 +34,8 @@ function check_configuration()
                 return false;
 	if(empty($GLOBALS['DATABASE_DSN']) || empty($GLOBALS['DATABASE_USER']) || empty($GLOBALS['DATABASE_PASSWORD']))
 		return false;
-	if(empty($GLOBALS['BASE_URI']))
-		return false;
+	//if(empty($GLOBALS['BASE_URI']))
+		//return false;
 
 	return true;
 }
