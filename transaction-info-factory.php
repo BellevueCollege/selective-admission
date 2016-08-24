@@ -17,17 +17,19 @@ class Transaction_Info_Factory
     function getTransactionDetails($transaction_id)
     {
         $transaction_details = array();
+        
         if($this->checkConfiguration() && !empty($transaction_id))
         {
-            $transaction_details["transaction_id"] = $transaction_id;
+            
             $request  = Anet\AuthnetApiFactory::getJsonApiHandler($GLOBALS['MERCHANT_LOGIN_ID'], $GLOBALS['MERCHANT_TRANSACTION_KEY'], $GLOBALS['SERVER_CODE']);
             $response = $request->getTransactionDetailsRequest(array(
               'transId' => $transaction_id
             )); 
             if(!empty($response))
-            {
-                // TODO: Check $response->transaction is not empty
-              
+            {               
+              if(!empty($response->messages->resultCode) && (strtolower($response->messages->resultCode) == 'ok'))
+              {
+                  $transaction_details["transaction_id"] = $transaction_id;
                 if(!empty($response->transaction->transactionStatus))
                 {                    
                     $transaction_details["transaction_status"] = $response->transaction->transactionStatus;
@@ -37,22 +39,22 @@ class Transaction_Info_Factory
                     if(!empty($response->transaction->batch->settlementTimeLocal))
                         $transaction_details["settlement_time"] = $response->transaction->batch->settlementTimeLocal;                   
                 }      
-                if(!empty($response->transaction->order))
-                {
-                    if(!empty($response->transaction->order->invoiceNumber))
-                         $transaction_details["invoice_number"] = $response->transaction->order->invoiceNumber;
-                    if(!empty($response->transaction->order->description))
-                        $transaction_details["order_description"] = $response->transaction->order->description;
-                }
+//                if(!empty($response->transaction->order))
+//                {
+//                    if(!empty($response->transaction->order->invoiceNumber))
+//                         $transaction_details["invoice_number"] = $response->transaction->order->invoiceNumber;
+//                    if(!empty($response->transaction->order->description))
+//                        $transaction_details["order_description"] = $response->transaction->order->description;
+//                }
                  if(!empty($response->transaction->payment)  )
                  {
-                     if(!empty($response->transaction->payment->creditCard))
-                     {
-                        if(!empty($response->transaction->payment->creditCard->cardNumber))
-                           $transaction_details["card_number"] = $response->transaction->payment->creditCard->cardNumber;
-                        if( $response->transaction->payment->creditCard->cardType)
-                            $transaction_details["card_type"] = $response->transaction->payment->creditCard->cardType;
-                     }
+//                     if(!empty($response->transaction->payment->creditCard))
+//                     {
+//                        if(!empty($response->transaction->payment->creditCard->cardNumber))
+//                           $transaction_details["card_number"] = $response->transaction->payment->creditCard->cardNumber;
+//                        if( $response->transaction->payment->creditCard->cardType)
+//                            $transaction_details["card_type"] = $response->transaction->payment->creditCard->cardType;
+//                     }
                      
                      if(!empty($response->transaction->billTo))
                      {
@@ -60,20 +62,21 @@ class Transaction_Info_Factory
                               $transaction_details["firstname"] = $response->transaction->billTo->firstName;
                          if(!empty($response->transaction->billTo->lastName))
                               $transaction_details["lastname"] = $response->transaction->billTo->lastName;
-                         if(!empty($response->transaction->billTo->address))
-                              $transaction_details["address"] = $response->transaction->billTo->address;
-                          if(!empty($response->transaction->billTo->city))
-                              $transaction_details["city"] = $response->transaction->billTo->city;
-                         if(!empty($response->transaction->billTo->state))
-                              $transaction_details["state"] = $response->transaction->billTo->state;
-                         if(!empty($response->transaction->billTo->zip))
-                              $transaction_details["zip"] = $response->transaction->billTo->zip;
+//                         if(!empty($response->transaction->billTo->address))
+//                              $transaction_details["address"] = $response->transaction->billTo->address;
+//                          if(!empty($response->transaction->billTo->city))
+//                              $transaction_details["city"] = $response->transaction->billTo->city;
+//                         if(!empty($response->transaction->billTo->state))
+//                              $transaction_details["state"] = $response->transaction->billTo->state;
+//                         if(!empty($response->transaction->billTo->zip))
+//                              $transaction_details["zip"] = $response->transaction->billTo->zip;
                          
                      }
                  }
+              }
             }
           
-        }        
+        } 
         return $transaction_details;
     }
     
@@ -91,13 +94,14 @@ class Transaction_Info_Factory
                 if(!empty($unsettled_transaction_ids[$i]))
                 {
                     $transaction_detail =  $this->getTransactionDetails($unsettled_transaction_ids[$i]);
+                    
                     if(!empty($transaction_detail) )//&& isset($transaction_detail["transactionStatus"]) && isset($transaction_detail['settlement_datetime']))
                     {                        
                         $returned_value = $database_connection->updateUnsettledTransaction($transaction_detail);
                         if($returned_value)
-                            $transaction_update_status[$unsettled_transaction_ids[$i]] = 'Update Successful';
+                            $transaction_update_status['TransactonID: '.$unsettled_transaction_ids[$i]] = 'Updated Successful';
                         else
-                             $transaction_update_status[$unsettled_transaction_ids[$i]] = 'Update Unsuccessful';
+                             $transaction_update_status['TransactonID: '.$unsettled_transaction_ids[$i]] = 'Updated Unsuccessful';
                         // TODO write to a file if the transaction got updated or not
                     }
                 }

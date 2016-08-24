@@ -60,7 +60,7 @@ class Database_Factory{
          $transaction_ids = array();
          
          while ( $row = $query->fetch() ) {            
-             $transaction_ids[] = $row['TransID']; 
+             $transaction_ids[] = $row['TransactionID']; 
          }
          
          return $transaction_ids;
@@ -71,59 +71,59 @@ class Database_Factory{
  */
     public function updateUnsettledTransaction($transaction_detail)
     {
-        var_dump($transaction_detail);
         extract($transaction_detail);
         if(!empty($transaction_id))
         {
             // Except Transaction id all other fields can have null value
             $transaction_status = !empty($transaction_status) ? $transaction_status : null;
             $settlement_time = !empty($settlement_time) ? $settlement_time : null;
-            $invoice_number = !empty($invoice_number) ? $invoice_number : null;
-            $order_description = !empty($order_description) ? $order_description : null;
-            $card_number = !empty($card_number) ? $card_number : null;
-            $card_type = !empty($card_type) ? $card_type : null;
+            //$invoice_number = !empty($invoice_number) ? $invoice_number : null;
+//            $order_description = !empty($order_description) ? $order_description : null;
+//            $card_number = !empty($card_number) ? $card_number : null;
+//            $card_type = !empty($card_type) ? $card_type : null;
             $firstname = !empty($firstname) ? $firstname : null;
             $lastname = !empty($lastname) ? $lastname : null;
-            $address = !empty($address) ? $address : null;
-            $city = !empty($city) ? $city : null;
-            $state = !empty($state) ? $state : null;
-            $zip = !empty($zip) ? $zip : null;
-            $country = !empty($country) ? $country : null;
+//            $address = !empty($address) ? $address : null;
+//            $city = !empty($city) ? $city : null;
+//            $state = !empty($state) ? $state : null;
+//            $zip = !empty($zip) ? $zip : null;
+//            $country = !empty($country) ? $country : null;
             
             $tsql = 'EXEC [usp_updateTransactionAndSettlementStatus]'
                     . '@TranStatus = :TransactionStatus,'
                     . '@SettleTime = :SettlementTime,'
                     . '@TransID = :TransactionID,'
-                    . '@OInvoiceNum = :InvoiceNumber,'
-                    . '@Odesc = :OrderDescription,'
-                    . '@CardNum = :CardNumber,'
-                    . '@CardType = :CardType,'
-                    . '@FName = :FirstName,'
-                    . '@LName = :LastName,'
-                    . '@Address = :Address,'
-                    . '@City = :City,'
-                    . '@State = :State,'
-                    . '@Zip = :Zip,'
-                    . '@country = :Country ;';
+                    //. '@OInvoiceNum = :InvoiceNumber,'
+                    //. '@Odesc = :OrderDescription,'
+                    //. '@CardNum = :CardNumber,'
+                    //. '@CardType = :CardType,'
+                    . '@BillFName = :FirstName,'
+                    . '@BillLName = :LastName;';
+                    //. '@Address = :Address,'
+                    //. '@City = :City,'
+                    //. '@State = :State,'
+                    //. '@Zip = :Zip,'
+                    //. '@country = :Country ;';
+                   
 
             $query = $this->database_connection->prepare( $tsql );
             $input_data = array( 'TransactionStatus' => $transaction_status ,
                                  'SettlementTime' => $settlement_time ,
                                  'TransactionID' => $transaction_id, 
-                                 'InvoiceNumber' => $invoice_number,
-                                 'OrderDescription' => $order_description,
-                                 'CardNumber' => $card_number,
-                                 'CardType' => $card_type,
+                                 //'InvoiceNumber' => $invoice_number,
+                                 //'OrderDescription' => $order_description,
+                                 //'CardNumber' => $card_number,
+                                 //'CardType' => $card_type,
                                  'FirstName' => $firstname,
-                                 'LastName' => $lastname ,
-                                 'Address' => $address,
-                                 'City' => $city,
-                                 'State' => $state,
-                                 'Zip' => $zip,
-                                 'Country' => $country
+                                 'LastName' => $lastname 
+                                 //'Address' => $address,
+                                 //'City' => $city,
+                                 //'State' => $state,
+                                 //'Zip' => $zip,
+                                 //'Country' => $country
                                );
-            
-             $result = $query->execute($input_data);        
+             $result = $query->execute($input_data); 
+             
              return $result;
         }
         return false;
