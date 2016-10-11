@@ -77,7 +77,7 @@ class Database_Factory{
             // Except Transaction id all other fields can have null value
             $transaction_status = !empty($transaction_status) ? $transaction_status : null;
             $settlement_time = !empty($settlement_time) ? $settlement_time : null;
-            //$invoice_number = !empty($invoice_number) ? $invoice_number : null;
+            $invoice_number = !empty($invoice_number) ? $invoice_number : null;
 //            $order_description = !empty($order_description) ? $order_description : null;
 //            $card_number = !empty($card_number) ? $card_number : null;
 //            $card_type = !empty($card_type) ? $card_type : null;
@@ -93,7 +93,7 @@ class Database_Factory{
                     . '@TranStatus = :TransactionStatus,'
                     . '@SettleTime = :SettlementTime,'
                     . '@TransID = :TransactionID,'
-                    //. '@OInvoiceNum = :InvoiceNumber,'
+                    . '@InvoiceNumber = :InvoiceNumber,'
                     //. '@Odesc = :OrderDescription,'
                     //. '@CardNum = :CardNumber,'
                     //. '@CardType = :CardType,'
@@ -110,7 +110,7 @@ class Database_Factory{
             $input_data = array( 'TransactionStatus' => $transaction_status ,
                                  'SettlementTime' => $settlement_time ,
                                  'TransactionID' => $transaction_id, 
-                                 //'InvoiceNumber' => $invoice_number,
+                                 'InvoiceNumber' => $invoice_number,
                                  //'OrderDescription' => $order_description,
                                  //'CardNumber' => $card_number,
                                  //'CardType' => $card_type,

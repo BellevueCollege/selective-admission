@@ -39,13 +39,13 @@ class Transaction_Info_Factory
                     if(!empty($response->transaction->batch->settlementTimeLocal))
                         $transaction_details["settlement_time"] = $response->transaction->batch->settlementTimeLocal;                   
                 }      
-//                if(!empty($response->transaction->order))
-//                {
-//                    if(!empty($response->transaction->order->invoiceNumber))
-//                         $transaction_details["invoice_number"] = $response->transaction->order->invoiceNumber;
+                if(!empty($response->transaction->order))
+                {
+                    if(!empty($response->transaction->order->invoiceNumber))
+                         $transaction_details["invoice_number"] = $response->transaction->order->invoiceNumber;
 //                    if(!empty($response->transaction->order->description))
 //                        $transaction_details["order_description"] = $response->transaction->order->description;
-//                }
+                }
                  if(!empty($response->transaction->payment)  )
                  {
 //                     if(!empty($response->transaction->payment->creditCard))
