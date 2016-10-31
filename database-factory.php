@@ -105,7 +105,7 @@ class Database_Factory{
                     //. '@Zip = :Zip,'
                     //. '@country = :Country ;';
                    
-
+            
             $query = $this->database_connection->prepare( $tsql );
             $input_data = array( 'TransactionStatus' => $transaction_status ,
                                  'SettlementTime' => $settlement_time ,
@@ -122,6 +122,7 @@ class Database_Factory{
                                  //'Zip' => $zip,
                                  //'Country' => $country
                                );
+          
              $result = $query->execute($input_data); 
              
              return $result;
