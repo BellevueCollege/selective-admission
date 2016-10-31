@@ -25,6 +25,7 @@ class Transaction_Info_Factory
             $response = $request->getTransactionDetailsRequest(array(
               'transId' => $transaction_id
             )); 
+            
             if(!empty($response))
             {               
               if(!empty($response->messages->resultCode) && (strtolower($response->messages->resultCode) == 'ok'))
@@ -39,13 +40,13 @@ class Transaction_Info_Factory
                     if(!empty($response->transaction->batch->settlementTimeLocal))
                         $transaction_details["settlement_time"] = $response->transaction->batch->settlementTimeLocal;                   
                 }      
-//                if(!empty($response->transaction->order))
-//                {
-//                    if(!empty($response->transaction->order->invoiceNumber))
-//                         $transaction_details["invoice_number"] = $response->transaction->order->invoiceNumber;
+                if(!empty($response->transaction->order))
+                {
+                    if(!empty($response->transaction->order->invoiceNumber))
+                         $transaction_details["invoice_number"] = $response->transaction->order->invoiceNumber;
 //                    if(!empty($response->transaction->order->description))
 //                        $transaction_details["order_description"] = $response->transaction->order->description;
-//                }
+                }
                  if(!empty($response->transaction->payment)  )
                  {
 //                     if(!empty($response->transaction->payment->creditCard))
@@ -94,7 +95,7 @@ class Transaction_Info_Factory
                 if(!empty($unsettled_transaction_ids[$i]))
                 {
                     $transaction_detail =  $this->getTransactionDetails($unsettled_transaction_ids[$i]);
-                    
+                
                     if(!empty($transaction_detail) )//&& isset($transaction_detail["transactionStatus"]) && isset($transaction_detail['settlement_datetime']))
                     {                        
                         $returned_value = $database_connection->updateUnsettledTransaction($transaction_detail);
@@ -112,7 +113,7 @@ class Transaction_Info_Factory
     
     function checkConfiguration()
     {
-         if(!empty($GLOBALS['MERCHANT_LOGIN_ID']) && !empty($GLOBALS['MERCHANT_TRANSACTION_KEY']) && !empty($GLOBALS['SERVER_CODE']))
+         if(!empty($GLOBALS['MERCHANT_LOGIN_ID']) && !empty($GLOBALS['MERCHANT_TRANSACTION_KEY']) && ($GLOBALS['SERVER_CODE'] == 0 || $GLOBALS['SERVER_CODE'] == 1))
              return true;
          
          return false;

@@ -3,7 +3,7 @@ require_once('config.php');
 require_once('database-factory.php');
 require_once('transaction-info-factory.php');
 // Define application version nuuber
-define( 'VERSION_NUMBER', '1.0' );
+define( 'VERSION_NUMBER', '1.1.0.1' );
 
 if(!check_configuration())
 	die("One or more of Config variables are not set.");
