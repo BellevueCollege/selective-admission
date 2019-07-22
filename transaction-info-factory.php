@@ -6,20 +6,18 @@ require_once 'database-factory.php';
 
 class Transaction_Info_Factory
 {
-    public function __construct() {
-      
-    }   
-    
     /*
      * For a given transaction id returns a JSON string of transaction information
      */
-    
     function getTransactionDetails($transaction_id)
     {
         $transaction_details = array();
         
-        if($this->checkConfiguration() && !empty($transaction_id))
-        {
+        $request = Anet\AuthnetApiFactory::getJsonApiHandler(
+            $GLOBALS['MERCHANT_LOGIN_ID'],
+            $GLOBALS['MERCHANT_TRANSACTION_KEY'],
+            $GLOBALS['SERVER_CODE']
+        );
             
             $request  = Anet\AuthnetApiFactory::getJsonApiHandler($GLOBALS['MERCHANT_LOGIN_ID'], $GLOBALS['MERCHANT_TRANSACTION_KEY'], $GLOBALS['SERVER_CODE']);
             $response = $request->getTransactionDetailsRequest(array(
@@ -111,12 +109,5 @@ class Transaction_Info_Factory
         return $transaction_update_status;
     }   
     
-    function checkConfiguration()
-    {
-         if(!empty($GLOBALS['MERCHANT_LOGIN_ID']) && !empty($GLOBALS['MERCHANT_TRANSACTION_KEY']) && ($GLOBALS['SERVER_CODE'] == 0 || $GLOBALS['SERVER_CODE'] == 1))
-             return true;
-         
-         return false;
-    }     
 }
 

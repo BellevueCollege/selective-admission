@@ -11,49 +11,40 @@ class Database_Factory{
     protected  $database_connection;
     
     public function __construct() {
-        
             $this->init_database();
             
     }// end of constructor
   
 /*
- *      Initialize database object
+    * Initialize database object
  */    
-    
     public function init_database()
     {
-        if($this->check_database_config())
-        {
             try
             {
-                $this->database_connection = new PDO( $GLOBALS['DATABASE_DSN'], $GLOBALS['DATABASE_USER'],$GLOBALS['DATABASE_PASSWORD'] );
+            $this->database_connection = new PDO(
+                $GLOBALS['DATABASE_DSN'],
+                $GLOBALS['DATABASE_USER'],
+                $GLOBALS['DATABASE_PASSWORD']
+            );
+
                 if (!$this->database_connection)
+            {
                     die('Something went wrong while connecting to the database'); // exit out 
-            } catch(PDOException $e)
+            }
+                
+        }
+        catch(PDOException $e)
             {
                     die( 'ERROR: ' . $e->getMessage() );
             }
-        }else
-		 die(' Database configuration not set'); // exit out 
     }
     
 /*
-	Check database configuration variables exists
+    *  Get transaction id's of all the transactions where  settlement date is null and transaction status is null from the database
 */
-    public function check_database_config()
-	{
-		if(!empty($GLOBALS['DATABASE_DSN'])  && !empty($GLOBALS['DATABASE_USER']) && !empty($GLOBALS['DATABASE_PASSWORD'] ))
-			return 1;
-
-		return 0;
-	}  
-        
-/*
- *      Get transaction id's of all the transactions where  settlement date is null and transaction status is null from the database
- */
     public function getUnsettledTransactionIds()
     {
-        
          $tsql = 'EXEC [usp_getTransactionAndSettlementStatus];';
          $query = $this->database_connection->prepare( $tsql );
          $query->execute();
@@ -62,7 +53,6 @@ class Database_Factory{
          while ( $row = $query->fetch() ) {            
              $transaction_ids[] = $row['TransactionID']; 
          }
-         
          return $transaction_ids;
     }
     
