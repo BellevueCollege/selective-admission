@@ -2,7 +2,9 @@
 require_once('config.php');
 require_once('database-factory.php');
 require_once('transaction-info-factory.php');
-// Define application version nuuber
+
+
+// Define application version number
 define( 'VERSION_NUMBER', '1.1.0.1' );
 
 if(!check_configuration())
@@ -11,11 +13,17 @@ if(!check_configuration())
 // Get all the transactions for which settlement time is null
 $database_connection = new Database_Factory();
 $unsettled_transaction_ids = $database_connection->getUnsettledTransactionIds();
-if(!empty($unsettled_transaction_ids))
+if($unsettled_transaction_ids)
 {
     $transaction_object = new Transaction_Info_Factory();
     $transaction_update_status = $transaction_object->updateUnsettledTransactions($unsettled_transaction_ids);
-    print_r( $transaction_update_status );
+    echo '<dl>';
+    foreach($transaction_update_status as $transaction => $status)
+    {
+        echo "<dt>$transaction</dt>";
+        echo "<dd>$status</dd>";
+    }
+    echo '</dl>';
 }
 else
 {
@@ -29,7 +37,7 @@ else
 	Check to make sure all configuration variables are not empty
 */
 function check_configuration()
-{	
+{
     if( empty($GLOBALS['MERCHANT_LOGIN_ID'])
          || empty($GLOBALS['MERCHANT_TRANSACTION_KEY'])
          || !isset($GLOBALS['SERVER_CODE'])
@@ -38,7 +46,7 @@ function check_configuration()
          || empty($GLOBALS['DATABASE_PASSWORD'])
         )
         {
-		return false;
+            return false;
         }
-	return true;
+    return true;
 }
