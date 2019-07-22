@@ -1,2 +1,5 @@
 config.php
 /nbproject
+/vendor
+.DS_Store
+settings.json
