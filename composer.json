@@ -1,5 +1,5 @@
 {
     "require": {
-        "stymiee/authnetjson": "2.5.*"
+        "stymiee/authnetjson": "3.1.*"
     }
 }
