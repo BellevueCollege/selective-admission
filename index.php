@@ -30,12 +30,15 @@ else
 */
 function check_configuration()
 {	
-	if(empty($GLOBALS['MERCHANT_LOGIN_ID']) && empty($GLOBALS['MERCHANT_TRANSACTION_KEY']) && !isset($GLOBALS['SERVER_CODE']))
-                return false;
-	if(empty($GLOBALS['DATABASE_DSN']) || empty($GLOBALS['DATABASE_USER']) || empty($GLOBALS['DATABASE_PASSWORD']))
+    if( empty($GLOBALS['MERCHANT_LOGIN_ID'])
+         || empty($GLOBALS['MERCHANT_TRANSACTION_KEY'])
+         || !isset($GLOBALS['SERVER_CODE'])
+         || empty($GLOBALS['DATABASE_DSN'])
+         || empty($GLOBALS['DATABASE_USER'])
+         || empty($GLOBALS['DATABASE_PASSWORD'])
+        )
+        {
 		return false;
-	//if(empty($GLOBALS['BASE_URI']))
-		//return false;
-
+        }
 	return true;
 }
