@@ -7,9 +7,17 @@ require_once('transaction-info-factory.php');
 // Define application version number
 define( 'VERSION_NUMBER', '1.1.0.1' );
 
-if(!check_configuration())
+if(!check_configuration()) {
 	die("One or more of Config variables are not set.");
+}
 
+/**
+ * Check if a valid key exists
+ */
+if( !isset($_GET["id"]) && !in_array($_GET['key'], $GLOBALS['ACCESS_KEYS'], true)){
+    http_response_code(403);
+    die('Access Denied');
+}
 // Get all the transactions for which settlement time is null
 $database_connection = new Database_Factory();
 $unsettled_transaction_ids = $database_connection->getUnsettledTransactionIds();
@@ -44,6 +52,7 @@ function check_configuration()
          || empty($GLOBALS['DATABASE_DSN'])
          || empty($GLOBALS['DATABASE_USER'])
          || empty($GLOBALS['DATABASE_PASSWORD'])
+         || empty($GLOBALS['ACCESS_KEYS'])
         )
         {
             return false;
