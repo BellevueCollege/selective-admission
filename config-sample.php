@@ -15,3 +15,9 @@ $GLOBALS['MERCHANT_TRANSACTION_KEY'] = "";  // Transaction Key
  $GLOBALS['DATABASE_USER'] = '';  // Username to connect to data source
  $GLOBALS['DATABASE_PASSWORD'] = '';  // Password to connect to data source
  
+ /**
+  * Access keys to prevent manual attacks on the endpoint
+  */
+  $GLOBALS['ACCESS_KEYS'] = [
+        // Keys to allow access
+  ];
