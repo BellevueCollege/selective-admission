@@ -5,7 +5,7 @@ require_once('transaction-info-factory.php');
 
 
 // Define application version number
-define( 'VERSION_NUMBER', '1.1.0.1' );
+define( 'VERSION_NUMBER', '1.2' );
 
 if(!check_configuration()) {
 	die("One or more of Config variables are not set.");
